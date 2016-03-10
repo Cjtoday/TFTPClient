@@ -1,9 +1,9 @@
 package message;
 
 import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 
 import request.Request;
-import status.TFTPErrorStatus;
 
 /*
  * all message constructor will be private. we will only create message objects
@@ -33,12 +33,20 @@ public class TFTPMessage
 	public static byte[] createRequestMessage(Request req, String foreignFilename, String mode)
 	{
 		
-		byte[] filenameByteArray = foreignFilename.getBytes();
-		byte[] modeByteArray = mode.getBytes();
+		byte[] filenameByteArray = foreignFilename.getBytes(StandardCharsets.US_ASCII);
+		byte[] modeByteArray = mode.getBytes(StandardCharsets.US_ASCII);
 		
 		byte[] opcode = new byte[2];
+		
 		opcode[0] = OPCODE_PREFIX;
-		opcode[1] = RRQ;
+		if(req == Request.READ)
+		{
+			opcode[1] = RRQ;
+		}
+		else
+		{
+			opcode[1] = WRQ;
+		}
 		
 		byte[] tftpPacket = new byte[2+ filenameByteArray.length + 1 + modeByteArray.length +1 ];
 		
@@ -71,7 +79,7 @@ public class TFTPMessage
 		opcode[0] = OPCODE_PREFIX;
 		opcode[1] = DATA;
 	
-		byte[] tftpPacket = new byte[TFTP_PACKET_SIZE];
+		byte[] tftpPacket = new byte[data.length + 4];
 		
 		ByteBuffer packetBuffer = ByteBuffer.wrap(tftpPacket);
 		
@@ -79,16 +87,9 @@ public class TFTPMessage
 		packetBuffer.put(blockNumberByteArray[1]);
 		packetBuffer.put(blockNumberByteArray[0]);
 		
-		if(data.length == TFTP_DATA_BLOCK_LENGTH)
-		{
-			
-			packetBuffer.put(data);
-			
-		}
-		else
-		{
-			//TODO error incorrect packet size
-		}
+		
+		packetBuffer.put(data);
+
 		
 		packetBuffer.flip();
 		
@@ -139,7 +140,7 @@ public class TFTPMessage
 		errorCodeByteArray[0] = (byte) 0;
 		errorCodeByteArray[1] = (byte) errorCode;
 		
-		byte[] errorMessageAsByteArray = errorMessage.getBytes();
+		byte[] errorMessageAsByteArray = errorMessage.getBytes(StandardCharsets.US_ASCII);
 		
 		byte[] opcode = new byte[2];
 		opcode[0] = OPCODE_PREFIX;

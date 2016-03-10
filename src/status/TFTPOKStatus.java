@@ -43,10 +43,9 @@ public class TFTPOKStatus implements ITFTPStatus
 	public String toString()
 	{
 		
-		String statusString = "";
 		
 	
-		return statusString;
+		return _statusMessage;
 		
 	}
 

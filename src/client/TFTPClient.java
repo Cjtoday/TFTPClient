@@ -23,33 +23,34 @@ import status.ITFTPStatus;
 
 public class TFTPClient 
 {
-	
-	
-	
-		
-	public static ITFTPStatus send(String hostname, String mode, String foreignFilename, String localFilename) throws SocketException, UnknownHostException, NoSuchAlgorithmException 
+
+
+
+
+	public static ITFTPStatus send(String hostname, String mode, String foreignFilename, String localFilename) throws UnknownHostException, SocketException, NoSuchAlgorithmException  
 	{
-		
-		TFTPSession transferSession = new TFTPSession(hostname, mode,foreignFilename, localFilename, Request.WRITE);
-		
+
+		TFTPSession transferSession = new TFTPSession(hostname, mode, foreignFilename, localFilename, Request.WRITE);
+
 		ITFTPStatus status;
 		status = transferSession.start();
-	
-		return status;
 		
+
+		return status;
+
 	}
-	
-	
-	
-	public static ITFTPStatus recieve(String hostname, String mode, String foreignFilename, String localFilename) throws SocketException, UnknownHostException, NoSuchAlgorithmException
+
+
+
+	public static ITFTPStatus recieve(String hostname, String mode, String foreignFilename, String localFilename) throws UnknownHostException, SocketException, NoSuchAlgorithmException 
 	{
-		
+
 		TFTPSession transferSession = new TFTPSession(hostname, mode, foreignFilename, localFilename, Request.READ);
-		
+
 		ITFTPStatus status;
 		status = transferSession.start();
-	
+
 		return status;
-		
+
 	}
 }
